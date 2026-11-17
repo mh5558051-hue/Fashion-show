@@ -559,4 +559,5 @@ async function syncUserToDb(user) {
   }
   await set(userRef, userData);
 }
-
+loadSettings();
+loadProducts();
