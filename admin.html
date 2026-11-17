@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | LUXE</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#b8935a;--gold-light:#d4af7a;--ink:#0e0e0e;--cream:#f7f4ef;--muted:#8a8478;--green:#2e8b57;--red:#c0392b;--shadow:0 10px 40px rgba(0,0,0,.08)}
+body{font-family:'Jost',sans-serif;background:#f0ece5;color:var(--ink)}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600}
+
+#loginPage{position:fixed;inset:0;background:linear-gradient(135deg,var(--ink),#1a1a1a);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.login-box{background:var(--cream);padding:60px 50px;width:100%;max-width:440px;box-shadow:0 40px 100px rgba(0,0,0,.4);position:relative}
+.login-box::before{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold-light))}
+.login-box .logo{font-family:'Cormorant Garamond',serif;font-size:38px;letter-spacing:8px;text-align:center;margin-bottom:8px;font-weight:700}
+.login-box .logo span{color:var(--gold)}
+.login-box p.sub{text-align:center;color:var(--muted);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:40px}
+.field{margin-bottom:22px}
+.field label{display:block;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:500}
+.field input{width:100%;padding:15px 18px;border:1px solid rgba(0,0,0,.12);background:#fff;font-size:15px;font-family:'Jost',sans-serif;outline:none;transition:border .3s}
+.field input:focus{border-color:var(--gold)}
+.btn-main{width:100%;padding:16px;background:var(--ink);color:var(--cream);border:none;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s;font-weight:500}
+.btn-main:hover{background:var(--gold)}
+.login-hint{margin-top:24px;padding:16px;background:rgba(184,147,90,.1);border-left:3px solid var(--gold);font-size:12px;color:var(--muted);line-height:1.7}
+.login-links{text-align:center;margin-top:20px;font-size:13px}
+.login-links a{color:var(--gold);cursor:pointer;margin:0 8px}
+.google-admin-btn{width:100%;padding:14px;margin-top:14px;background:#fff;border:1px solid #ddd;cursor:pointer;font-family:'Jost',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px}
+.google-admin-btn i{color:#4285F4}
+
+#dashboard{display:none;min-height:100vh}
+#dashboard.show{display:flex}
+.sidebar{width:260px;background:var(--ink);color:var(--cream);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100}
+.sb-logo{padding:32px 30px;font-family:'Cormorant Garamond',serif;font-size:28px;letter-spacing:6px;font-weight:700;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo span{color:var(--gold)}
+.sb-user{padding:22px 30px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:14px}
+.sb-user .avatar{width:42px;height:42px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;overflow:hidden}
+.sb-user .avatar img{width:100%;height:100%;object-fit:cover}
+.sb-user small{display:block;font-size:11px;opacity:.5}
+.sb-menu{list-style:none;padding:20px 0}
+.sb-menu li a{display:flex;align-items:center;gap:14px;padding:15px 30px;color:rgba(255,255,255,.6);font-size:14px;letter-spacing:1px;transition:all .3s;border-left:3px solid transparent;text-decoration:none;cursor:pointer}
+.sb-menu li a i{width:18px;font-size:15px}
+.sb-menu li a:hover,.sb-menu li a.active{background:rgba(184,147,90,.12);color:var(--gold-light);border-left-color:var(--gold)}
+.main{margin-left:260px;flex:1;padding:40px 50px;width:calc(100% - 260px)}
+.top-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px}
+.top-head h1{font-size:38px}
+.top-head p{color:var(--muted);font-size:14px;margin-top:4px}
+.view-site{padding:12px 24px;background:var(--ink);color:var(--cream);border:none;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.view-site:hover{background:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-bottom:42px}
+.stat-card{background:#fff;padding:24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--gold)}
+.stat-card .icon{position:absolute;top:20px;right:20px;width:42px;height:42px;border-radius:50%;background:rgba(184,147,90,.1);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:16px}
+.stat-card .label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:500}
+.stat-card .value{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.panel-card{background:#fff;box-shadow:var(--shadow);padding:32px;margin-bottom:26px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;flex-wrap:wrap;gap:16px}
+.panel-head h2{font-size:28px}
+.btn-add{padding:13px 26px;background:var(--gold);color:#fff;border:none;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-weight:500;display:inline-flex;align-items:center;gap:8px}
+.btn-add:hover{background:var(--gold-light)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+table thead th{text-align:left;padding:14px 12px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid rgba(0,0,0,.08)}
+table tbody td{padding:16px 12px;border-bottom:1px solid rgba(0,0,0,.05);vertical-align:middle}
+table tbody tr:hover{background:rgba(184,147,90,.04)}
+.prod-thumb{width:56px;height:64px;object-fit:cover;background:#eee}
+.prod-name{font-weight:500;margin-bottom:3px}
+.prod-sub{font-size:12px;color:var(--muted)}
+.pill{padding:5px 12px;border-radius:20px;font-size:11px;text-transform:uppercase;font-weight:500;display:inline-block}
+.pill.women{background:#fce4ec;color:#c2185b}
+.pill.men{background:#e3f2fd;color:#1565c0}
+.pill.acc{background:#fff3e0;color:#ef6c00}
+.pill.pending{background:#fff3cd;color:#856404}
+.pill.confirmed{background:#d1ecf1;color:#0c5460}
+.pill.shipped{background:#cce5ff;color:#004085}
+.pill.delivered{background:#d4edda;color:#155724}
+.pill.cancelled{background:#f8d7da;color:#721c24}
+.act-btn{width:34px;height:34px;border:1px solid rgba(0,0,0,.1);background:transparent;border-radius:4px;cursor:pointer;margin-right:6px;font-size:13px;transition:all .3s}
+.act-btn.edit:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+.act-btn.del:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--cream);width:100%;max-width:700px;max-height:90vh;overflow-y:auto;position:relative}
+.modal-head{padding:28px 32px;border-bottom:1px solid rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--cream);z-index:2}
+.modal-head h3{font-size:26px}
+.modal-head i{cursor:pointer;font-size:20px}
+.modal-head i:hover{color:var(--gold)}
+.modal-body{padding:32px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-2 .full{grid-column:1/-1}
+.m-field{margin-bottom:20px}
+.m-field label{display:block;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:500}
+.m-field input,.m-field select,.m-field textarea{width:100%;padding:13px 16px;border:1px solid rgba(0,0,0,.12);background:#fff;font-size:14px;font-family:'Jost',sans-serif;outline:none;transition:border .3s}
+.m-field input:focus,.m-field select:focus,.m-field textarea:focus{border-color:var(--gold)}
+.m-field textarea{resize:vertical;min-height:80px}
+.img-preview{width:100%;height:180px;object-fit:cover;margin-top:10px;background:#eee;border:1px dashed rgba(0,0,0,.15)}
+.modal-foot{padding:24px 32px;border-top:1px solid rgba(0,0,0,.08);display:flex;justify-content:flex-end;gap:14px}
+.btn-cancel{padding:13px 26px;background:transparent;border:1px solid rgba(0,0,0,.15);font-family:'Jost',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.btn-cancel:hover{border-color:var(--red);color:var(--red)}
+
+.settings-group{background:#fff;padding:28px;margin-bottom:20px;box-shadow:var(--shadow)}
+.settings-group h3{font-size:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid rgba(0,0,0,.06);font-family:'Jost',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.settings-grid .full{grid-column:1/-1}
+.settings-grid .m-field{margin-bottom:0}
+.settings-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}
+
+.order-card{background:#fff;border:1px solid rgba(0,0,0,.06);padding:22px;margin-bottom:18px;box-shadow:var(--shadow)}
+.order-head{display:flex;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.order-head h3{font-size:22px}
+.order-info{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:14px;margin-bottom:16px}
+.order-info strong{display:block;font-size:11px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.order-items-list{border-top:1px solid rgba(0,0,0,.06);padding-top:16px}
+.order-item-row{display:flex;gap:14px;padding:10px 0;align-items:center;border-bottom:1px solid rgba(0,0,0,.04)}
+.order-item-row img{width:50px;height:60px;object-fit:cover;background:#eee}
+.order-item-row div{flex:1;font-size:13px}
+.order-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.status-select{padding:8px 14px;border:1px solid rgba(0,0,0,.12);font-family:'Jost',sans-serif;font-size:13px;cursor:pointer;background:#fff}
+.pay-info{background:#f7f4ef;padding:16px;margin-bottom:16px;border-left:3px solid #b8935a}
+.pay-status{padding:6px 14px;border-radius:20px;font-size:11px;text-transform:uppercase;font-weight:600;display:inline-block;letter-spacing:1px}
+.pay-status.unpaid{background:#fff3cd;color:#856404}
+.pay-status.pending_verification{background:#ffe4b5;color:#8a5a00}
+.pay-status.paid{background:#d4edda;color:#155724}
+.pay-status.rejected{background:#f8d7da;color:#721c24}
+.empty-tab{text-align:center;padding:70px 20px;color:var(--muted)}
+.empty-tab i{font-size:56px;color:var(--gold);opacity:.35;margin-bottom:20px}
+.empty-tab h3{font-size:24px;color:var(--ink);margin-bottom:8px}
+
+.toast{position:fixed;bottom:36px;right:36px;background:var(--ink);color:var(--cream);padding:16px 30px;border-left:3px solid var(--gold);font-size:14px;z-index:3000;transform:translateY(120px);opacity:0;transition:all .5s}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:transform .3s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%;padding:24px}.stats{grid-template-columns:1fr 1fr}.grid-2,.settings-grid{grid-template-columns:1fr}.order-info{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="loginPage">
+  <div class="login-box">
+    <div class="logo">LUX<span>E</span></div>
+    <p class="sub">Admin Control Panel</p>
+    <form onsubmit="adminEmailLogin(event)">
+      <div class="field"><label>ইমেইল</label><input type="email" id="loginEmail" placeholder="admin@email.com" required></div>
+      <div class="field"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="••••••••" required></div>
+      <button class="btn-main" type="submit">লগইন করুন</button>
+    </form>
+    <button class="google-admin-btn" onclick="adminGoogleLogin()">
+      <i class="fa-brands fa-google"></i> Google দিয়ে লগইন
+    </button>
+    <div class="login-links">
+      <a onclick="adminForgotPassword()">পাসওয়ার্ড ভুলে গেছেন?</a>
+    </div>
+    <div class="login-hint">
+      <strong>শুধুমাত্র অনুমোদিত অ্যাডমিন।</strong><br>
+      আপনার UID: Ag8XJGbIgQg2oNN84b417eoxkl52
+    </div>
+  </div>
+</div>
+
+<div id="dashboard">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">LUX<span>E</span></div>
+    <div class="sb-user">
+      <div class="avatar" id="adminAvatar">A</div>
+      <div><strong id="adminName">Admin</strong><small>SUPER USER</small></div>
+    </div>
+    <ul class="sb-menu">
+      <li><a class="active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> ড্যাশবোর্ড</a></li>
+      <li><a data-tab="products"><i class="fa-solid fa-box"></i> পণ্য</a></li>
+      <li><a data-tab="orders"><i class="fa-solid fa-receipt"></i> অর্ডার <span id="orderBadge" style="background:var(--red);color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;margin-left:auto;display:none">0</span></a></li>
+      <li><a data-tab="users"><i class="fa-solid fa-users"></i> ইউজার</a></li>
+      <li><a data-tab="settings"><i class="fa-solid fa-sliders"></i> সাইট সেটিংস</a></li>
+      <li><a href="index.html" target="_blank"><i class="fa-solid fa-store"></i> ওয়েবসাইট</a></li>
+      <li><a onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</a></li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <div class="top-head">
+      <div><h1 id="pageTitle">ড্যাশবোর্ড</h1><p id="pageSub">স্টোরের সম্পূর্ণ নিয়ন্ত্রণ</p></div>
+      <a href="index.html" target="_blank" class="view-site"><i class="fa-solid fa-arrow-up-right-from-square"></i> সাইট ভিজিট</a>
+    </div>
+
+    <div class="tab-panel active" id="tab-dashboard">
+      <div class="stats">
+        <div class="stat-card"><div class="icon"><i class="fa-solid fa-box"></i></div><div class="label">মোট পণ্য</div><div class="value" id="statProducts">0</div></div>
+        <div class="stat-card"><div class="icon"><i class="fa-solid fa-receipt"></i></div><div class="label">পেন্ডিং</div><div class="value" id="statOrders">0</div></div>
+        <div class="stat-card"><div class="icon"><i class="fa-solid fa-credit-card"></i></div><div class="label">পেমেন্ট</div><div class="value" id="statPendingPay">0</div></div>
+        <div class="stat-card"><div class="icon"><i class="fa-solid fa-coins"></i></div><div class="label">রেভিনিউ</div><div class="value" id="statRevenue" style="font-size:22px">৳ ০</div></div>
+        <div class="stat-card"><div class="icon"><i class="fa-solid fa-users"></i></div><div class="label">ইউজার</div><div class="value" id="statUsers">0</div></div>
+      </div>
+      <div class="panel-card">
+        <div class="panel-head"><h2>সাম্প্রতিক পণ্য</h2>
+          <button class="btn-add" onclick="openModal()"><i class="fa-solid fa-plus"></i> নতুন পণ্য</button></div>
+        <div class="table-wrap"><table><thead><tr><th>পণ্য</th><th>ক্যাটাগরি</th><th>দাম</th><th>স্টক</th></tr></thead><tbody id="recentProducts"></tbody></table></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-products">
+      <div class="panel-card">
+        <div class="panel-head"><h2>সব পণ্য (<span id="prodCount">0</span>)</h2>
+          <button class="btn-add" onclick="openModal()"><i class="fa-solid fa-plus"></i> নতুন পণ্য</button></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>ছবি</th><th>নাম</th><th>ক্যাটাগরি</th><th>দাম</th><th>স্টক</th><th>অ্যাকশন</th></tr></thead>
+          <tbody id="productTable"></tbody></table></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-orders">
+      <div class="panel-card">
+        <div class="panel-head"><h2>সব অর্ডার</h2></div>
+        <div id="ordersList"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-users">
+      <div class="panel-card">
+        <div class="panel-head"><h2>নিবন্ধিত ইউজার</h2></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>ছবি</th><th>নাম</th><th>ইমেইল</th><th>রোল</th><th>জয়েন</th></tr></thead>
+          <tbody id="usersTable"></tbody></table></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-settings">
+      <form id="settingsForm" onsubmit="saveSettings(event)">
+        <div class="settings-group">
+          <h3>সাইট পরিচিতি</h3>
+          <div class="settings-grid">
+            <div class="m-field"><label>সাইটের নাম</label><input id="s_site_name"></div>
+            <div class="m-field"><label>ট্যাগলাইন</label><input id="s_site_tagline"></div>
+            <div class="m-field full"><label>টপবার লেখা</label><input id="s_topbar_text"></div>
+          </div>
+        </div>
+        <div class="settings-group">
+          <h3>হিরো সেকশন</h3>
+          <div class="settings-grid">
+            <div class="m-field full"><label>আইব্রো</label><input id="s_hero_eyebrow"></div>
+            <div class="m-field"><label>টাইটেল লাইন ১</label><input id="s_hero_title_line1"></div>
+            <div class="m-field"><label>টাইটেল হাইলাইট</label><input id="s_hero_title_em"></div>
+            <div class="m-field"><label>টাইটেল লাইন ২</label><input id="s_hero_title_line2"></div>
+            <div class="m-field"><label>বাটন লেখা</label><input id="s_hero_button"></div>
+            <div class="m-field full"><label>বিবরণ</label><textarea id="s_hero_description"></textarea></div>
+            <div class="m-field full"><label>হিরো ছবির URL</label><input id="s_hero_image"></div>
+          </div>
+        </div>
+        <div class="settings-group">
+          <h3>পণ্য সেকশন</h3>
+          <div class="settings-grid">
+            <div class="m-field"><label>ট্যাগ</label><input id="s_section_tag"></div>
+            <div class="m-field"><label>টাইটেল</label><input id="s_section_title"></div>
+            <div class="m-field"><label>টাইটেল হাইলাইট</label><input id="s_section_title_em"></div>
+          </div>
+        </div>
+        <div class="settings-group">
+          <h3>ফুটার</h3>
+          <div class="settings-grid">
+            <div class="m-field full"><label>পরিচিতি</label><textarea id="s_footer_about"></textarea></div>
+            <div class="m-field"><label>ফোন</label><input id="s_footer_phone"></div>
+            <div class="m-field"><label>ইমেইল</label><input id="s_footer_email"></div>
+            <div class="m-field"><label>ঠিকানা</label><input id="s_footer_address"></div>
+            <div class="m-field full"><label>কপিরাইট</label><input id="s_footer_copyright"></div>
+          </div>
+        </div>
+        <div class="settings-group">
+          <h3>সোশ্যাল লিংক</h3>
+          <div class="settings-grid">
+            <div class="m-field"><label>Instagram</label><input id="s_social_instagram"></div>
+            <div class="m-field"><label>Facebook</label><input id="s_social_facebook"></div>
+            <div class="m-field"><label>Pinterest</label><input id="s_social_pinterest"></div>
+            <div class="m-field"><label>TikTok</label><input id="s_social_tiktok"></div>
+          </div>
+        </div>
+        <div class="settings-group">
+          <h3>পেমেন্ট নম্বর</h3>
+          <div class="settings-grid">
+            <div class="m-field"><label>bKash নম্বর</label><input id="s_payment_bkash_number"></div>
+            <div class="m-field"><label>Nagad নম্বর</label><input id="s_payment_nagad_number"></div>
+            <div class="m-field"><label>Rocket নম্বর</label><input id="s_payment_rocket_number"></div>
+          </div>
+        </div>
+        <div class="settings-actions">
+          <button type="submit" class="btn-add"><i class="fa-solid fa-check"></i> সেভ করুন</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modalTitle">নতুন পণ্য</h3><i class="fa-solid fa-xmark" onclick="closeModal()"></i></div>
+    <div class="modal-body">
+      <input type="hidden" id="pId">
+      <div class="grid-2">
+        <div class="m-field full"><label>পণ্যের নাম *</label><input id="pName"></div>
+        <div class="m-field"><label>ক্যাটাগরি *</label>
+          <select id="pCategory"><option value="Women">Women</option><option value="Men">Men</option><option value="Accessories">Accessories</option></select></div>
+        <div class="m-field"><label>স্টক</label><input type="number" id="pStock" value="100"></div>
+        <div class="m-field"><label>দাম (৳) *</label><input type="number" id="pPrice"></div>
+        <div class="m-field"><label>পুরনো দাম</label><input type="number" id="pOldPrice" value="0"></div>
+        <div class="m-field full"><label>ব্যাজ</label><input id="pBadge" placeholder="নতুন/সেল/এক্সক্লুসিভ"></div>
+        <div class="m-field full"><label>সংক্ষিপ্ত বিবরণ</label><textarea id="pDesc"></textarea></div>
+        <div class="m-field full"><label>বিস্তারিত তথ্য</label><textarea id="pDetails"></textarea></div>
+        <div class="m-field full"><label>ছবি আপলোড (৫MB)</label><input type="file" id="pFile" accept="image/*" onchange="uploadImage(event)"></div>
+        <div class="m-field full"><label>অথবা ছবির URL</label><input id="pImgUrl" placeholder="https://..." onchange="previewUrl()"></div>
+        <div class="m-field full"><img id="imgPreview" class="img-preview" style="display:none"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal()">বাতিল</button>
+      <button class="btn-add" onclick="saveProduct()" id="saveBtn">সেভ করুন</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script type="module" src="admin.js"></script>
+</body>
+</html>
